@@ -134,7 +134,7 @@ public class Server {
         private void sync() {
             try {
                 System.out.println("<< SyncResponse");
-                this.outgoing.writeObject(new SyncResponse(new HashSet<Account>(this.server.getAccounts()),new LinkedList<Post>(this.server.getNewFriendsPosts(this.account))));
+                writeObject(new SyncResponse(new HashSet<Account>(this.server.getAccounts()),new LinkedList<Post>(this.server.getNewFriendPosts(this.account))));
                 this.outgoing.flush();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -144,7 +144,7 @@ public class Server {
         public synchronized List<Post> getNewFriendPosts(Account Account)
         {
             for (Post p : this.server.getNewPosts){
-                if (Account.isFriendWith(p.getPoster)) result.add(p);
+                if (Account.isFriendsWith(p.getPoster)) result.add(p);
             }
 
             return result;
@@ -152,7 +152,7 @@ public class Server {
 
         public synchronized List<Post> getNewPosts(Account Account){
             int postsLastSync=Account.getPostAtLastSync();
-            this.setPostAtLastSync(this.posts.size());
+            Account.setPostAtLastSync(this.posts.size());
             return new ArrayList<Post>(this.post.subList(postsLastSync, this.posts.size()));
         }
         

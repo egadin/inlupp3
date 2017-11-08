@@ -8,8 +8,9 @@ public class Account implements Serializable, Comparable<Account> {
     private String userId;
     private boolean passwordReset;
     private Set<Account> friends = new TreeSet<Account>();
-    public Set<Account> ignoredFriends = new TreeSet<Account>();
+    private Set<Account> ignoredFriends = new TreeSet<Account>();
     private int postsAtLastSync;
+    
     public Account(String userId, String password) {
         this.userId   = userId;
         this.password = password;
