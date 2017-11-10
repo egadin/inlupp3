@@ -131,29 +131,32 @@ public class Server {
             server.addAccount(neu);
         }
 
-        private void sync() {
-            try {
+        private void sync() {  
+            try{
                 System.out.println("<< SyncResponse");
-                writeObject(new SyncResponse(new HashSet<Account>(this.server.getAccounts()),new LinkedList<Post>(this.server.getNewFriendPosts(this.account))));
-                this.outgoing.flush();
+                new SyncResponse(new HashSet<Account>(this.server.getAccounts()),new LinkedList<Post>(this.getNewFriendPosts(this.account)));
+                
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
         }
 
-        public synchronized List<Post> getNewFriendPosts(Account Account)
+        public synchronized List<Post> getNewFriendPosts(Account a)
         {
-            for (Post p : this.server.getNewPosts){
-                if (Account.isFriendsWith(p.getPoster)) result.add(p);
-            }
+            List<Post>result = new ArrayList<Post>();
+            for (Post p : this.getNewPosts(a)){
+                if (a.isFriendsWith(p.getPoster())){
+                    result.add(p);
+                }
+            } 
 
             return result;
         }
-
-        public synchronized List<Post> getNewPosts(Account Account){
-            int postsLastSync=Account.getPostAtLastSync();
-            Account.setPostAtLastSync(this.posts.size());
-            return new ArrayList<Post>(this.post.subList(postsLastSync, this.posts.size()));
+        
+        public synchronized List<Post> getNewPosts(Account a){
+            int postsLastSync=a.getPostAtLastSync();
+            a.setPostAtLastSync(this.server.posts.size());
+            return new ArrayList<Post>(this.server.posts.subList(postsLastSync, this.server.posts.size()));
         }
         
         public void run() {

@@ -26,7 +26,7 @@ public class Account implements Serializable, Comparable<Account> {
     }
 
     public void setPostAtLastSync(int posts) {
-        this.postsAtLastSync=posts;
+        this.postsAtLastSync = posts;
     }
     
     public String getName() {
@@ -82,7 +82,10 @@ public class Account implements Serializable, Comparable<Account> {
     public Account[] getFriends() {
         return (Account[]) this.friends.toArray(new Account[0]);
     }
-
+    
+    public Account[] getIgnoredFriends() {
+        return (Account[]) this.ignoredFriends.toArray(new Account[0]);
+    }
     public boolean equals(Object o) {
         if (o instanceof Account) {
             return ((Account) o).userId.equals(this.userId);

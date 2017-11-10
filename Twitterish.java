@@ -150,8 +150,8 @@ public class Twitterish {
             System.out.println("Ignored " + friend.getName());
         }
 
-        private void unignoreFriend() {
-            Account[] friends=Array.from(this.loggedInUser.ignoredFriends);
+        private void unIgnoreFriend() {
+            Account[] friends=this.loggedInUser.getIgnoredFriends();
             this.printEnumeratedChoices(friends);
             String choiceString = System.console().readLine();
             int choice = Integer.parseInt(choiceString);
