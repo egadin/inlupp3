@@ -26,4 +26,8 @@ public class Feed {
 
         return result;
     }
+      public void printFeed() {
+            System.out.println(this.renderAll());
+        
+    }
 }

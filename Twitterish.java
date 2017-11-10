@@ -33,6 +33,7 @@ public class Twitterish {
         public Client(String serverIp, int port) {
             this.serverIp = serverIp;
             this.port = port;
+            this.feed=new Feed();
         }
 
         private void newAccount(Account account) {
@@ -40,12 +41,12 @@ public class Twitterish {
         }
 
         private void newPost(Post post) {
-            if (this.loggedInUser.isFriendsWith(post.getPoster()) &&
-                !this.loggedInUser.isCurrentlyIgnoring(post.getPoster())) {
+              if (this.loggedInUser.isFriendsWith(post.getPoster()) &&
+              !this.loggedInUser.isCurrentlyIgnoring(post.getPoster())) {
                 feed.addPost(post);
-            } else {
+                 } else {
                 // Ignore post
-            }
+                  }
         }
 
         // This is the code that sends a message to the server.
@@ -165,7 +166,7 @@ public class Twitterish {
         }
 
         private void updateMessagesOnScreen() {
-            System.out.println(this.feed.renderAll());
+            this.feed.printFeed();
         }
         
         private void editAccount() {
@@ -173,14 +174,16 @@ public class Twitterish {
             String password = new String(System.console().readPassword());
 
             if (password.equals(this.loggedInUser.getPassword())) {
+                UpdateAccount A=new UpdateAccount();
+                A.AddOldAccount(this.loggedInUser);
                 System.out.print("Update your password: ");
-                password = new String(System.console().readPassword());
+                this.loggedInUser.setPassword(String.valueOf(System.console().readPassword()));
 
                 System.out.print("Enter your user name: ");
-                String name = System.console().readLine();
-
-                String userid = this.loggedInUser.getUserId();
-                this.sendMessage(new Account(userid, password, name));
+                this.loggedInUser.setName(System.console().readLine());
+                A.AddNewAccount(this.loggedInUser);
+                this.sendMessage(new UpdateAccount());
+   
             } else {
                 System.out.println("Wrong password!");
             }
@@ -209,8 +212,8 @@ public class Twitterish {
 
                 // TODO
                 // Use the feed object for this
-                for (Post p : ((SyncResponse) o).getPosts())
-                    System.out.println(p.render());
+                for (Post p : ((SyncResponse)o).getPosts())
+                    this.newPost(p);
 
             } else {
                 System.out.println("Error: expected sync response, got " + o.getClass());
@@ -300,7 +303,7 @@ public class Twitterish {
                 this.listFriends();
                 return true;
             case 'u':
-                this.updateMessagesOnScreen();
+                this.updateMessagesOnScreen();   ////////LÄGG TILL SIG SJÄLV SOM VÄN!!!!!!
                 return true;
             case 'q':
                 this.quit();

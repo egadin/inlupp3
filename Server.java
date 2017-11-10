@@ -54,7 +54,35 @@ public class Server {
     public synchronized void addPost(Post p) {
         this.posts.add(p);
     }
+    
+    public synchronized List<Post> getNewFriendPosts(Account a)
+    {
+        List<Post>result = new ArrayList<Post>();
+        for (Post p : this.getNewPosts(a)){
+            if (a.isFriendsWith(p.getPoster())){
+                result.add(p);
+            }
+        } 
+        
+        return result;
+        }
+    
+    public synchronized List<Post> getNewPosts(Account a){
+        int postsLastSync=a.getPostAtLastSync();
+        a.setPostAtLastSync(this.posts.size());
+        return new ArrayList<Post>(this.posts.subList(postsLastSync, this.posts.size()));
+    }
 
+    /*   public void changePosterName(String oldName, String newName) {
+        for (Account a:knownUsers) {
+            if (a.getName()==oldName) {
+                a.setName(newName);
+                }
+            }
+
+        }
+    */
+    
     static class ClientProxy extends Thread {
         private Account account;
         private Socket socket;
@@ -132,42 +160,29 @@ public class Server {
         }
 
         private void sync() {  
-            try{
+            try {
                 System.out.println("<< SyncResponse");
-                new SyncResponse(new HashSet<Account>(this.server.getAccounts()),new LinkedList<Post>(this.getNewFriendPosts(this.account)));
-                
+                this.outgoing.writeObject (new SyncResponse(new HashSet<Account>(this.server.getAccounts()),
+                                              new LinkedList<Post>(this.server.getNewFriendPosts(this.account))));
+                this.outgoing.flush();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
+            }      
             }
-        }
-
-        public synchronized List<Post> getNewFriendPosts(Account a)
-        {
-            List<Post>result = new ArrayList<Post>();
-            for (Post p : this.getNewPosts(a)){
-                if (a.isFriendsWith(p.getPoster())){
-                    result.add(p);
-                }
-            } 
-
-            return result;
-        }
-        
-        public synchronized List<Post> getNewPosts(Account a){
-            int postsLastSync=a.getPostAtLastSync();
-            a.setPostAtLastSync(this.server.posts.size());
-            return new ArrayList<Post>(this.server.posts.subList(postsLastSync, this.server.posts.size()));
-        }
         
         public void run() {
             try {
                 while (true) {
                     Object o = this.incoming.readObject();
                     System.err.println(">> Received: " + o.getClass().getName());
-                    // o instanceof Account checks if o is an account
-                    // (Account) o type casts o into an Account so that it can be used as one
+                     o instanceof Account checks if o is an account
+                     (Account) o type casts o into an Account so that it can be used as one
                     if (o instanceof Account) {
-                        this.updateAccount(this.account, (Account) o);
+                      this.updateAccount(this.account, (Account) o);
+                     if (o instanceof UpdateAccount) {
+                        Account A=((UpdateAccount) o).getOldAccount();
+                        Account B=((UpdateAccount) o).getNewAccount();
+                    this.updateAccount(A,B);
                     } else if (o instanceof PostMessage) {
                         this.postMessage(((PostMessage) o).getMsg());
                     } else if (o instanceof AddFriend) {
