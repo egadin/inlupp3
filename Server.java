@@ -155,12 +155,16 @@ public class Server {
         }
 
         private void updateAccount(Account old, Account neu) {
+            System.out.println("uppdateacc");
             server.removeAccount(old);
+             System.out.println("removeacc");            
             server.addAccount(neu);
+            System.out.println("addnewacc");
         }
 
         private void sync() {  
             try {
+                this.outgoing.reset();
                 System.out.println("<< SyncResponse");
                 this.outgoing.writeObject (new SyncResponse(new HashSet<Account>(this.server.getAccounts()),
                                               new LinkedList<Post>(this.server.getNewFriendPosts(this.account))));
@@ -175,14 +179,12 @@ public class Server {
                 while (true) {
                     Object o = this.incoming.readObject();
                     System.err.println(">> Received: " + o.getClass().getName());
-                     o instanceof Account checks if o is an account
-                     (Account) o type casts o into an Account so that it can be used as one
+                    // o instanceof Account checks if o is an account
+                    // (Account) o type casts o into an Account so that it can be used as one
                     if (o instanceof Account) {
                       this.updateAccount(this.account, (Account) o);
-                     if (o instanceof UpdateAccount) {
-                        Account A=((UpdateAccount) o).getOldAccount();
-                        Account B=((UpdateAccount) o).getNewAccount();
-                    this.updateAccount(A,B);
+                    } else if (o instanceof UpdateAccount) {
+                        this.updateAccount((((UpdateAccount) o).getOldAccount()),(((UpdateAccount) o).getNewAccount()));
                     } else if (o instanceof PostMessage) {
                         this.postMessage(((PostMessage) o).getMsg());
                     } else if (o instanceof AddFriend) {

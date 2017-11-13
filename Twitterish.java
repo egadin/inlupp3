@@ -53,6 +53,7 @@ public class Twitterish {
         // You should not need to touch this code.
         private void sendMessage(Object o) {
             try {
+                this.outgoing.reset();
                 this.outgoing.writeObject(o);
                 this.outgoing.flush();
             } catch (IOException ioe) {
@@ -175,14 +176,14 @@ public class Twitterish {
 
             if (password.equals(this.loggedInUser.getPassword())) {
                 UpdateAccount A=new UpdateAccount();
-                A.AddOldAccount(this.loggedInUser);
+                A.AddOldAccount(this.loggedInUser);  ///Blir detta bara pekare så att vi tar bort det som används i vårt updateaccountmeddelande när vi gör remove och add i servern
                 System.out.print("Update your password: ");
                 this.loggedInUser.setPassword(String.valueOf(System.console().readPassword()));
 
                 System.out.print("Enter your user name: ");
                 this.loggedInUser.setName(System.console().readLine());
                 A.AddNewAccount(this.loggedInUser);
-                this.sendMessage(new UpdateAccount());
+                this.sendMessage(A);
    
             } else {
                 System.out.println("Wrong password!");
