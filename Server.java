@@ -155,11 +155,8 @@ public class Server {
         }
 
         private void updateAccount(Account old, Account neu) {
-            System.out.println("uppdateacc");
-            server.removeAccount(old);
-             System.out.println("removeacc");            
-            server.addAccount(neu);
-            System.out.println("addnewacc");
+            server.removeAccount(old);          
+            server.addAccount(neu);    
         }
 
         private void sync() {  

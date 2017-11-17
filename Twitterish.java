@@ -176,7 +176,7 @@ public class Twitterish {
 
             if (password.equals(this.loggedInUser.getPassword())) {
                 UpdateAccount A=new UpdateAccount();
-                A.AddOldAccount(this.loggedInUser);  ///Blir detta bara pekare så att vi tar bort det som används i vårt updateaccountmeddelande när vi gör remove och add i servern
+                A.AddOldAccount(this.loggedInUser);  
                 System.out.print("Update your password: ");
                 this.loggedInUser.setPassword(String.valueOf(System.console().readPassword()));
 
@@ -204,15 +204,23 @@ public class Twitterish {
             Object o = this.receiveMessage();
             if (o instanceof SyncResponse) {
                 this.knownUsers.addAll(((SyncResponse) o).getUsers());
-                // TODO
-                // Go through all known users on this side of the fence
-                // and update them if their name has changed
+              
+                Iterator<Account> it;
+                for (it=((SyncResponse) o).getUsers().iterator(); it.hasNext();) {
+                    Account next = it.next();
 
-                // TODO
-                // Only print the posts that I am interested in
+                    Iterator<Account> it2;
+                    for (it2=this.knownUsers.iterator(); it2.hasNext();) {
+                        Account next2=it2.next();
 
-                // TODO
-                // Use the feed object for this
+                        if (next2.getUserId().equals(next.getUserId())) {
+                            next2.setName(next.getName());
+                           
+                        }
+                    }
+                }
+           
+             
                 for (Post p : ((SyncResponse)o).getPosts())
                     this.newPost(p);
 
