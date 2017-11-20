@@ -2,10 +2,11 @@ import java.util.List;
 import java.util.LinkedList;
 
 public class Feed {
-    private List<Post> posts = new LinkedList<Post>();
-
+    private List<Post> postsServer = new LinkedList<Post>();
+private List<Post> posts = new LinkedList<Post>();
+    
     public void addPost(Post post) {
-        posts.add(0, post);
+        postsServer.add(0, post);
     }
 
     public String renderAll() {
@@ -26,8 +27,15 @@ public class Feed {
 
         return result;
     }
-      public void printFeed() {
-            System.out.println(this.renderAll());
-        
+
+    
+          public void printFeed(Account user) {
+             
+          for (Post p: postsServer) {
+              if (user.isFriendsWith(p.getPoster())) {
+                  posts.add(0,p);
+              }
+          }
+          System.out.println(this.renderAll());
     }
 }

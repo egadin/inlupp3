@@ -41,8 +41,7 @@ public class Twitterish {
         }
 
         private void newPost(Post post) {
-              if (this.loggedInUser.isFriendsWith(post.getPoster()) &&
-              !this.loggedInUser.isCurrentlyIgnoring(post.getPoster())) {
+            if (this.loggedInUser.isFriendsWith(post.getPoster())) {
                 feed.addPost(post);
                  } else {
                 // Ignore post
@@ -167,7 +166,7 @@ public class Twitterish {
         }
 
         private void updateMessagesOnScreen() {
-            this.feed.printFeed();
+            this.feed.printFeed(this.loggedInUser);
         }
         
         private void editAccount() {
@@ -215,7 +214,8 @@ public class Twitterish {
 
                         if (next2.getUserId().equals(next.getUserId())) {
                             next2.setName(next.getName());
-                           
+
+                            
                         }
                     }
                 }

@@ -155,8 +155,15 @@ public class Server {
         }
 
         private void updateAccount(Account old, Account neu) {
-            server.removeAccount(old);          
-            server.addAccount(neu);    
+            // for (Post p: this.server.posts) {
+                //     if ((p.getPoster()).getUserId()==neu.getUserId())
+                //  p.setPoster(neu);
+                // }
+            Account A= server.getAccountFor(old.getUserId());
+            A.setName(neu.getName());
+            //      server.removeAccount(old);
+            // server.addAccount(neu);
+            
         }
 
         private void sync() {  

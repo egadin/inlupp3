@@ -18,4 +18,8 @@ public class Post implements Serializable {
     public String render() {
         return "{" + this.poster.getName() + "} says:\n" + this.content + "\n";
     }
+
+    public void setPoster(Account newUser) {
+        this.poster=newUser;
+    }
 }
