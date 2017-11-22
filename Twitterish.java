@@ -41,11 +41,7 @@ public class Twitterish {
         }
 
         private void newPost(Post post) {
-            if (this.loggedInUser.isFriendsWith(post.getPoster())) {
                 feed.addPost(post);
-                 } else {
-                // Ignore post
-                  }
         }
 
         // This is the code that sends a message to the server.
@@ -220,7 +216,7 @@ public class Twitterish {
                     }
                 }
            
-             
+                 
                 for (Post p : ((SyncResponse)o).getPosts())
                     this.newPost(p);
 
