@@ -5,7 +5,6 @@ import java.util.*;
 /**
  * Main class for the startup of Twitterish requiring server id and port number 
  */
-
 public class Twitterish {
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -378,6 +377,7 @@ public class Twitterish {
             System.out.print("[R]emove friend    |  ");
             System.out.println();
             System.out.print("[I]gnore friend    |  ");
+            System.out.print("Unignore [f]riend    |  ");
             System.out.print("[L]ist friends     |  ");
             System.out.print("[E]dit account     |  ");
             System.out.print("[U]pdate           |  ");
@@ -406,6 +406,9 @@ public class Twitterish {
                 return true;
             case 'i':
                 this.ignoreFriend();
+                return true;
+            case 'f':
+                this.unIgnoreFriend();
                 return true;
             case 'e':
                 this.editAccount();
